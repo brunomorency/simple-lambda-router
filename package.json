@@ -1,0 +1,18 @@
+{
+  "name": "lambda-router",
+  "version": "0.1.0",
+  "description": "Small router utility for lambda functions handling HTTP events from multiple resources/paths and methods",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd test && mocha test-*.js"
+  },
+  "author": "Bruno Morency <bruno@morency.me>",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
+    "hoek": "^4.1.1",
+    "joi": "^10.6.0",
+    "mocha": "^3.4.2"
+  }
+}
