@@ -25,7 +25,7 @@ In addition to routing requests to the right handler, this package adds a few us
 The package exposes a `route()` method. It takes routing configuration and its return value is the handler of your lambda function. For example, if the code below is in a `index.js` file of your function, then `index.handler` would be defined as the handler for your lambda function.
 
 ```javascript
-const Router = require('lambda-router')
+const Router = require('simple-lambda-router')
 exports.handler = Router.route(
   {
     resources: {
@@ -77,7 +77,7 @@ Your handler function must return a Promise. It resolves to an object that conta
 If your Promise is rejected or has uncaught exceptions, the router will send a `500 Internal Server Error` response back to lambda. You can reject with a specific HTTP error as follows:
 
 ```javascript
-const Router = require('lambda-router')
+const Router = require('simple-lambda-router')
 module.exports.handler = (request, context) => {
   return new Promise((resolve, reject) => {
     reject(new Router.error({ 

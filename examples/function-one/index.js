@@ -1,6 +1,6 @@
 'use strict'
 
-const Router = require('lambda-router')
+const Router = require('simple-lambda-router')
 const path = require('path')
 
 let objectList = [

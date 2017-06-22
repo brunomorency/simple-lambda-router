@@ -1,5 +1,5 @@
 {
-  "name": "lambda-router",
+  "name": "simple-lambda-router",
   "version": "0.1.0",
   "description": "Small router utility for lambda functions handling HTTP events from multiple resources and methods",
   "main": "index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunomorency/lambda-router.git"
+    "url": "git+https://github.com/brunomorency/simple-lambda-router.git"
   },
   "keywords": [
     "lambda",
@@ -31,7 +31,7 @@
     "AWS"
   ],
   "bugs": {
-    "url": "https://github.com/brunomorency/lambda-router/issues"
+    "url": "https://github.com/brunomorency/simple-lambda-router/issues"
   },
-  "homepage": "https://github.com/brunomorency/lambda-router#readme"
+  "homepage": "https://github.com/brunomorency/simple-lambda-router#readme"
 }
