@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Examples lambda-router usage.
+Resources:
+  FunctionOne:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs6.10
+      CodeUri: ./function-one/
+      Events:
+        ListResources:
+          Type: Api
+          Properties:
+            Path: /items
+            Method: GET
+        CreateResource:
+          Type: Api
+          Properties:
+            Path: /items
+            Method: POST
+        ResourceInfo:
+          Type: Api
+          Properties:
+            Path: /items/{id}
+            Method: ANY
+        ResourceLinks:
+          Type: Api
+          Properties:
+            Path: /items/{id}/links
+            Method: ANY
