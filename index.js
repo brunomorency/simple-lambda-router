@@ -79,7 +79,7 @@ module.exports = {
           implementation.handler(request, context, ...handlerParams)
           .then(response => {
             debugLog(`handler success: ${JSON.stringify(response)}`)
-            response.body = (response.body) ? JSON.stringify(response.body) : ''
+            response.body = (response.body && typeof response.body == 'object') ? JSON.stringify(response.body) : ''
             if (!('headers' in response)) response.headers = cfg.headers
             else {
               for (let header in cfg.headers) {
