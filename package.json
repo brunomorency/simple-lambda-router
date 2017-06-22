@@ -7,12 +7,31 @@
     "test": "cd test && mocha test-*.js"
   },
   "author": "Bruno Morency <bruno@morency.me>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^4.0.2",
     "chai-as-promised": "^7.0.0",
-    "hoek": "^4.1.1",
     "joi": "^10.6.0",
     "mocha": "^3.4.2"
-  }
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunomorency/lambda-router.git"
+  },
+  "keywords": [
+    "lambda",
+    "routing",
+    "serverless",
+    "serverless-application-model",
+    "SAM",
+    "AWS"
+  ],
+  "bugs": {
+    "url": "https://github.com/brunomorency/lambda-router/issues"
+  },
+  "homepage": "https://github.com/brunomorency/lambda-router#readme"
 }

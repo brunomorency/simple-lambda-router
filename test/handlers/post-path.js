@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path')
 const joi = require('joi')
-const hoek = require('hoek')
+
 module.exports = {
   handler: (request, context) => {
     return new Promise((resolve, reject) => {
