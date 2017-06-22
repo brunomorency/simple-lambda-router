@@ -1,7 +1,7 @@
 {
   "name": "lambda-router",
   "version": "0.1.0",
-  "description": "Small router utility for lambda functions handling HTTP events from multiple resources/paths and methods",
+  "description": "Small router utility for lambda functions handling HTTP events from multiple resources and methods",
   "main": "index.js",
   "scripts": {
     "test": "cd test && mocha test-*.js"
