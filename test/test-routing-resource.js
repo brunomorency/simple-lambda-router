@@ -12,7 +12,11 @@ let router = require('../index').route({
     'GET:/path/{id}': path.resolve('handlers/get-path-id'),
     'GET:/path/{id}/sub': path.resolve('handlers/get-path-id-sub'),
     'PUT:/path/{id}': path.resolve('handlers/put-path-id'),
-    'DELETE:/path/{id}': path.resolve('handlers/delete-path-id')
+    'DELETE:/path/{id}': path.resolve('handlers/delete-path-id'),
+    'GET:/another/{id}/one': path.resolve('handlers/another-one-resource')
+  },
+  paths: {
+    'GET:/another/{id}/one': path.resolve('handlers/another-one-path')
   }
 })
 
@@ -141,6 +145,22 @@ describe('Routing from request.resource:', function () {
     router(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(404)
+        done()
+      }
+      catch(e) { done(e) }
+    })
+  })
+
+  it('Takes precedence over path-based routing when both match a request', function (done) {
+    let fakeReq = {
+      resource: '/another/{id}/one',
+      path: '/another/1234/one',
+      httpMethod: 'GET'
+    }
+    router(fakeReq, {}, function (err,res) {
+      try {
+        let body = JSON.parse(res.body)
+        body.executedFile.should.equal('another-one-resource')
         done()
       }
       catch(e) { done(e) }

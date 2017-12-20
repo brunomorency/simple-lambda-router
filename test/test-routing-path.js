@@ -39,7 +39,7 @@ describe('Routing from request.path:', function () {
   it('Routes to correct handler and extracts params for a path with a param', function (done) {
     let fakeReq = {
       resource: '/{proxy+}',
-      path: '/path/1234',
+      path: '/path/TheId',
       httpMethod: 'GET',
       pathParameters: {}
     }
@@ -50,7 +50,7 @@ describe('Routing from request.path:', function () {
         body.should.have.property('pathParameters')
         body.executedFile.should.equal('get-path-id')
         body.pathParameters.should.have.property('id')
-        body.pathParameters.id.should.equal('1234')
+        body.pathParameters.id.should.equal('TheId')
         done()
       }
       catch(e) { done(e) }

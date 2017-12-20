@@ -7,8 +7,6 @@ class RouteError extends Error {
   }
 }
 
-var _debugLog = () => {}
-
 module.exports = {
 
   error: RouteError,
@@ -21,7 +19,7 @@ module.exports = {
       paths: null,
       debug: false
     }, config)
-    _debugLog = (cfg.debug) ? (msg) => console.log(`ROUTER: ${msg}`) : () => {};
+    let _debugLog = (cfg.debug) ? (msg) => console.log(`ROUTER: ${msg}`) : () => {};
 
     _debugLog(`request: ${JSON.stringify(request)}`)
 
@@ -46,6 +44,14 @@ module.exports = {
       if (handler) {
 
         try {
+
+          if (cfg.debug) {
+            if (handler.type == 'resource') {
+              _debugLog(`[method: ${request.httpMethod}, resource: ${request.resource}] Executing matching resource handler ${cfg.resources[resourceHandlerFileKey]}`)
+            } else {
+              _debugLog(`[method: ${request.httpMethod}, path: ${request.path}] Executing matching path handler ${cfg.paths[matchingPathKey]}`)
+            }
+          }
 
           let implementation = (handler.type == 'resource') ? require(cfg.resources[handler.key]) : require(cfg.paths[handler.key])
 
@@ -138,10 +144,7 @@ function _getRequestHandlerFile(cfg, request) {
   let resourceHandlerFileKey = [request.httpMethod.toUpperCase(), request.resource.toLowerCase()].join(':')
 
   if (cfg.resources && resourceHandlerFileKey in cfg.resources) {
-
-    _debugLog(`[method: ${request.httpMethod}, resource: ${request.resource}] Executing matching resource handler ${cfg.resources[resourceHandlerFileKey]}`)
     return { type: 'resource', key: resourceHandlerFileKey }
-
   } else if (cfg.paths) {
 
     // Go through configured paths to find one that matches request.path
@@ -155,10 +158,10 @@ function _getRequestHandlerFile(cfg, request) {
     })
 
     if (matchingPathKey) {
-      _debugLog(`[method: ${request.httpMethod}, path: ${request.path}] Executing matching path handler ${cfg.paths[matchingPathKey]}`)
+      let originalReqPathParts = request.path.split('/')
       matchingPathKey.split(':').pop().split('/').forEach((part, idx) => {
         if (part.substr(0,1) == '{' && part.substr(-1) == '}') {
-          request.pathParameters[part.slice(1,-1)] = reqPathParts[idx]
+          request.pathParameters[part.slice(1,-1)] = originalReqPathParts[idx]
         }
       })
       return { type: 'path', key: matchingPathKey }
