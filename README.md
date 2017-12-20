@@ -15,7 +15,7 @@ In addition to routing requests to the right handler, this package adds a few us
 - **Error handling**: The router catches exceptions from the handler code result in a clean 500 error. Also, there's an extended `Error` class useful to reject requests with a specific status code.
 - **Response headers**: You can define default headers to be included in responses for all requests (e.g. CORS headers) and add more headers for specific requests in the handler code.
 - **Input validation**: You can define body and query parameters validation rules and the router will apply them. If body or query parameters don't match your validation rules, the request is rejected with appropriate error code and your handler code isn't executed. The way validation works allows setting default value for optional input.
-- **Request body parsing**: If the incoming request as a `Content-Type` header indicating the body is JSON data. It will be parsed into a JS object before it is passed to you handler code.
+- **Request body parsing**: If the incoming request has a `Content-Type` header indicating the body is JSON data. It will be parsed into a JS object before it is passed to you handler code.
 
 # How It Works
 
@@ -86,7 +86,7 @@ The `handler` function gets the `request` and `context` arguments as if they wer
 Your handler function must return a Promise. It resolves to an object that must contains a `statusCode` and `body` property, it may also contain a `headers` property:
 
 - If `body` is an object, it will go through `JSON.stringify()` before being sent back as the response body.
-- HTTP headers defined in the `headers` property are included in the response in addition to those included in the initial `Router.route()` call. If a given header is defined in both places, the value given in the here as precedence.
+- HTTP headers defined in the `headers` property are included in the response in addition to those included in the initial `Router.route()` call. If the same HTTP header is defined in both places, the value in the promise resolution of the handler has precedence.
 
 If your Promise is rejected or has uncaught exceptions, the router will send a `500 Internal Server Error` response back to lambda. You can reject with a specific HTTP error as follows:
 
@@ -137,9 +137,17 @@ module.exports = {
 
 ## Routing based on `request.path`
 
-If your API gateway has a proxy resource with a greedy path vairable `{proxy+}`, the `request.resource` value will be that greedy path and the `request.path` value will contain the actual path with no extracted parameters showing in `request.pathParameters`. This router allows you to define path-based routing with parameters and those parameters will be extracted and added in `request.pathParameters`. 
+If your API gateway has a [proxy resource with a greedy path variable `{proxy+}`](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html), the `request.resource` value will be that greedy path and the `request.path` will be the actual path with no extracted parameters showing in `request.pathParameters`. 
 
-Look for under the `examples` directory for more information. Tests are also useful for reference.
+> **Example**:
+>    
+> Your API declares a `/{proxy+}` resource and receives a `GET /items/34`. Upon receiving that request, API Gateway sends an object to your Lambda function with a `resource` property set to `/{proxy+}` and `path` property set to `/items/34`.
 
-# Complete Examples
+This package allows you to define path-based routing. In other words, the routing logic looks at `/items/34` from the example above, not `/{proxy+}` as it would with resource-based routing. Note that your path route can contain named parameter the same way they are defined in an API Gateway resource path. Those parameters will be extracted and added in the `pathParameters` property of the request object sent to your handler.
+
+> **Example** [ctnd]:
+>  
+> A path key of `GET:/items/{id}` will match the request from the example and your handler will have `request.pathParameters.id` set to `34`
+
+# Examples
 See the `examples` directory for a more complete example. Looking at tests may also be useful.
