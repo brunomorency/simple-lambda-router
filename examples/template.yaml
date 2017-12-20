@@ -1,31 +1,87 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Examples simple-lambda-router usage.
+Description: Example usage for simple-lambda-router package
+
 Resources:
-  FunctionOne:
+
+  ApiDefinition:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        swagger: 2.0
+        info:
+          title: !Ref AWS::StackName
+        paths:
+          /items:
+            x-amazon-apigateway-any-method:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ItemsHandlerFn.Arn}/invocations
+                passthroughBehavior: when_no_match
+                httpMethod: POST
+                type: aws_proxy
+          /items/{id}:
+            x-amazon-apigateway-any-method:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ItemsHandlerFn.Arn}/invocations
+                passthroughBehavior: when_no_match
+                httpMethod: POST
+                type: aws_proxy
+          /items/{id}/links:
+            x-amazon-apigateway-any-method:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ItemsHandlerFn.Arn}/invocations
+                passthroughBehavior: when_no_match
+                httpMethod: POST
+                type: aws_proxy
+          /{proxy+}:
+            x-amazon-apigateway-any-method:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OtherResourcesHandlerFn.Arn}/invocations
+                passthroughBehavior: when_no_match
+                httpMethod: POST
+                type: aws_proxy
+
+  ItemsHandlerFn:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
       Runtime: nodejs6.10
-      CodeUri: ./function-one/
+      CodeUri: ./items-fn/
       Events:
-        ListResources:
+        CollectionRequest:
           Type: Api
           Properties:
+            RestApiId: !Ref ApiDefinition
             Path: /items
-            Method: GET
-        CreateResource:
+            Method: ANY
+        EntityRequest:
           Type: Api
           Properties:
-            Path: /items
-            Method: POST
-        ResourceInfo:
-          Type: Api
-          Properties:
+            RestApiId: !Ref ApiDefinition
             Path: /items/{id}
             Method: ANY
-        ResourceLinks:
+        EntityLinksRequest:
           Type: Api
           Properties:
+            RestApiId: !Ref ApiDefinition
             Path: /items/{id}/links
+            Method: ANY
+
+  OtherResourcesHandlerFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs6.10
+      CodeUri: ./others-fn/
+      Events:
+        GenericRequest:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiDefinition
+            Path: /{proxy+}
             Method: ANY

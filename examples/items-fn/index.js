@@ -18,13 +18,15 @@ exports.handler = Router.route(
       'GET:/items': path.resolve('list'),
       'POST:/items': path.resolve('create'),
       'GET:/items/{id}': path.resolve('get-id'),
-      'DELETE:/items/{id}': path.resolve('delete-id')
+      'DELETE:/items/{id}': path.resolve('delete-id'),
+      'GET:/items/{id}/links': path.resolve('get-id-links')
     },
     headers: {
-      'Access-Control-Allow-Methods': "GET,OPTIONS,POST",
+      'Access-Control-Allow-Methods': "OPTIONS,GET,POST,DELETE",
       'Access-Control-Allow-Origin': "*",
       'Access-Control-Allow-Headers': "Content-Type,Authorization,Origin,Accept,Accept-Encoding,Accept-Language,X-Amz-Date,X-Api-Key,X-Amz-Security-Token"
-    }
+    },
+    debug: true
   },
   objectList
 )

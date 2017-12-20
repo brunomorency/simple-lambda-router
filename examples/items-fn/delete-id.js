@@ -4,9 +4,9 @@ const router = require('simple-lambda-router')
 
 module.exports.handler = (request, context, objectList) => {
   return new Promise((resolve, reject) => {
-    let oldCount = objectList.length
-    objectList = objectList.filter(r => r.id !== +request.pathParameters.id)
-    if (oldCount > objectList.length) {
+    let idx = objectList.findIndex(r => r.id == +request.pathParameters.id)
+    if (idx >= 0) {
+      objectList.splice(idx,1)
       resolve({
         statusCode: 204
       })

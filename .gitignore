@@ -2,5 +2,5 @@
 .DS_Store
 node_modules/*
 examples/*/node_modules/*
-examples/_tmpl.yaml
-examples/deploy
+examples/*/package-lock.json
+examples/.sampic

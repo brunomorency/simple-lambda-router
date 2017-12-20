@@ -47,9 +47,9 @@ module.exports = {
 
           if (cfg.debug) {
             if (handler.type == 'resource') {
-              _debugLog(`[method: ${request.httpMethod}, resource: ${request.resource}] Executing matching resource handler ${cfg.resources[resourceHandlerFileKey]}`)
+              _debugLog(`[method: ${request.httpMethod}, resource: ${request.resource}] Executing matching resource handler ${cfg.resources[handler.key]}`)
             } else {
-              _debugLog(`[method: ${request.httpMethod}, path: ${request.path}] Executing matching path handler ${cfg.paths[matchingPathKey]}`)
+              _debugLog(`[method: ${request.httpMethod}, path: ${request.path}] Executing matching path handler ${cfg.paths[handler.key]}`)
             }
           }
 
@@ -109,7 +109,7 @@ module.exports = {
           })
 
         } catch (err) {
-          _debugLog(`handler error:`, err)
+          _debugLog(`handler error:`, err.message)
           return lambdaCallback(null, genericInternalErrorResponse)
         }
 
