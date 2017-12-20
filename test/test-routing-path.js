@@ -7,7 +7,7 @@ const fs = require('fs')
 const path = require('path')
 
 let router = require('../index').route({
-  resources: {
+  paths: {
     'GET:/path': path.resolve('handlers/get-path'),
     'GET:/path/{id}': path.resolve('handlers/get-path-id'),
     'GET:/path/{id}/sub': path.resolve('handlers/get-path-id-sub'),
@@ -16,21 +16,19 @@ let router = require('../index').route({
   }
 })
 
-// function getFakeRequest(filename) {
-//   return JSON.parse(fs.readFileSync(path.resolve(filename)))
-// }
-
-describe('Routing from request.resource:', function () {
+describe('Routing from request.path:', function () {
 
   it('Routes to correct handler for a simple path', function (done) {
     let fakeReq = {
-      resource: '/path',
+      resource: '/{proxy+}',
       path: '/path',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
+      pathParameters: {}
     }
     router(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
+        body.should.have.property('executedFile')
         body.executedFile.should.equal('get-path')
         done()
       }
@@ -38,32 +36,42 @@ describe('Routing from request.resource:', function () {
     })
   })
 
-  it('Routes to correct handler for a path with a param', function (done) {
+  it('Routes to correct handler and extracts params for a path with a param', function (done) {
     let fakeReq = {
-      resource: '/path/{id}',
+      resource: '/{proxy+}',
       path: '/path/1234',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
+      pathParameters: {}
     }
     router(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
+        body.should.have.property('executedFile')
+        body.should.have.property('pathParameters')
         body.executedFile.should.equal('get-path-id')
+        body.pathParameters.should.have.property('id')
+        body.pathParameters.id.should.equal('1234')
         done()
       }
       catch(e) { done(e) }
     })
   })
 
-  it('Routes to correct handler for a deeper path with a param', function (done) {
+  it('Routes to correct handler and extracts params for a deeper path with a param', function (done) {
     let fakeReq = {
-      resource: '/path/{id}/sub',
+      resource: '/{proxy+}',
       path: '/path/1234/sub',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
+      pathParameters: {}
     }
     router(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
+        body.should.have.property('executedFile')
+        body.should.have.property('pathParameters')
         body.executedFile.should.equal('get-path-id-sub')
+        body.pathParameters.should.have.property('id')
+        body.pathParameters.id.should.equal('1234')
         done()
       }
       catch(e) { done(e) }
@@ -73,13 +81,19 @@ describe('Routing from request.resource:', function () {
   describe('Routes same resource to correct handler based on HTTP method', function () {
     it('calls PUT handler when HTTP method is PUT', function (done) {
       let fakeReq = {
-        resource: '/path/{id}',
-        httpMethod: 'PUT'
+        resource: '/{proxy+}',
+        path: '/path/1234',
+        httpMethod: 'PUT',
+        pathParameters: {}
       }
       router(fakeReq, {}, function (err,res) {
         try {
           let body = JSON.parse(res.body)
+          body.should.have.property('executedFile')
+          body.should.have.property('pathParameters')
           body.executedFile.should.equal('put-path-id')
+          body.pathParameters.should.have.property('id')
+          body.pathParameters.id.should.equal('1234')
           done()
         }
         catch(e) { done(e) }
@@ -87,14 +101,19 @@ describe('Routing from request.resource:', function () {
     })
     it('calls DELETE handler when HTTP method is DELETE', function (done) {
       let fakeReq = {
-        resource: '/path/{id}',
+        resource: '/{proxy+}',
         path: '/path/1234',
-        httpMethod: 'DELETE'
+        httpMethod: 'DELETE',
+        pathParameters: {}
       }
       router(fakeReq, {}, function (err,res) {
         try {
           let body = JSON.parse(res.body)
+          body.should.have.property('executedFile')
+          body.should.have.property('pathParameters')
           body.executedFile.should.equal('delete-path-id')
+          body.pathParameters.should.have.property('id')
+          body.pathParameters.id.should.equal('1234')
           done()
         }
         catch(e) { done(e) }
@@ -104,9 +123,10 @@ describe('Routing from request.resource:', function () {
 
   it('Returns 204 response for any OPTIONS request', function (done) {
     let fakeReq = {
-      resource: '/does/not/matter',
+      resource: '/{proxy+}',
       path: '/does/not/matter',
-      httpMethod: 'OPTIONS'
+      httpMethod: 'OPTIONS',
+      pathParameters: {}
     }
     router(fakeReq, {}, function (err,res) {
       try {
@@ -119,9 +139,10 @@ describe('Routing from request.resource:', function () {
 
   it('Returns 405 errors when no route is defined for a requested method', function (done) {
     let fakeReq = {
-      resource: '/path/{id}',
+      resource: '/{proxy+}',
       path: '/path/1234',
-      httpMethod: 'POST'
+      httpMethod: 'POST',
+      pathParameters: {}
     }
     router(fakeReq, {}, function (err,res) {
       try {
@@ -134,9 +155,10 @@ describe('Routing from request.resource:', function () {
 
   it('Returns 404 errors when no route (any method) is defined for a requested resource', function (done) {
     let fakeReq = {
-      resource: '/path/{id}/invalid',
+      resource: '/{proxy+}',
       path: '/path/1234/invalid',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
+      pathParameters: {}
     }
     router(fakeReq, {}, function (err,res) {
       try {

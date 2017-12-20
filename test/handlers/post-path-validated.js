@@ -10,7 +10,8 @@ module.exports = {
         body: {
           executedFile: path.basename(__filename, '.js'),
           originalRequestBody: request.body,
-          requestBodyType: typeof request.body
+          requestBodyType: typeof request.body,
+          pathParameters: request.pathParameters
         }
       })
     })

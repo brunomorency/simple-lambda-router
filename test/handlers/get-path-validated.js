@@ -8,7 +8,8 @@ module.exports = {
       resolve({
         statusCode: 200,
         body: {
-          executedFile: path.basename(__filename, '.js')
+          executedFile: path.basename(__filename, '.js'),
+          pathParameters: request.pathParameters
         }
       })
     })
