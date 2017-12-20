@@ -161,7 +161,7 @@ function _getRequestHandlerFile(cfg, request) {
       let originalReqPathParts = request.path.split('/')
       matchingPathKey.split(':').pop().split('/').forEach((part, idx) => {
         if (part.substr(0,1) == '{' && part.substr(-1) == '}') {
-          request.pathParameters[part.slice(1,-1)] = originalReqPathParts[idx]
+          request.pathParameters[part.slice(1,-1)] = decodeURIComponent(originalReqPathParts[idx])
         }
       })
       return { type: 'path', key: matchingPathKey }
