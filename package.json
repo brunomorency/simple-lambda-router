@@ -1,6 +1,6 @@
 {
   "name": "simple-lambda-router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Small router utility for lambda functions handling HTTP events from multiple resources and methods",
   "main": "index.js",
   "scripts": {
