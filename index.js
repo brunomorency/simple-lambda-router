@@ -89,9 +89,7 @@ module.exports = {
             response.body = (response.body && typeof response.body == 'object') ? JSON.stringify(response.body) : ''
             if (!('headers' in response)) response.headers = cfg.headers
             else {
-              for (let header in cfg.headers) {
-                response.headers[header] = cfg.headers[header]
-              }
+              response.headers = Object.assign({}, cfg.headers, response.headers)
             }
             return lambdaCallback(null, response)
           })
