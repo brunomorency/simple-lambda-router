@@ -7,9 +7,8 @@ module.exports.handler = (request, context, cityItem, knownCities) => {
   // happened in previous steps of the handler chain
   return Promise.resolve({
     statusCode: 200,
-    body: {
-      name: cityItem.name,
-      information: cityItem.getDdgLink()
-    }
+    body: [
+      // .. list of restaurants here
+    ]
   })
 }
