@@ -149,5 +149,13 @@ This package allows you to define path-based routing. In other words, the routin
 >  
 > A path key of `GET:/items/{id}` will match the request from the example and your handler will have `request.pathParameters.id` set to `34`
 
+## Chaining handlers
+
+It is possible to handle requests to a path or resource through a chain of handlers instead of a single handler file. This is useful if many endpoints have common validations (e.g. handlers for `/items/4`, `/items/4/links`, and `/items/4/foo` would all need to check if item 4 actually exist and return a 404 if it doesn't). 
+
+You chain handlers by setting the handlers as an array of files. Each step in the handler chain follows the same structure as a single-file handler (it returns an object with a `handler` function returning a Promise and an optional `validate` object). Validation rules are enforced for each step of the chain and each step gets the value the previous step resolves to as one if its arguments.
+
+See examples under `items-fn` or the `test-07-chained-handlers.js` file for more details.
+
 # Examples
 See the `examples` directory for a more complete example. Looking at tests may also be useful.
