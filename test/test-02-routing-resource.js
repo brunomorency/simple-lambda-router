@@ -6,7 +6,7 @@ chai.use(chaiAsPromised)
 const fs = require('fs')
 const path = require('path')
 
-let router = require('../index').route({
+let fnHandler = require('../index').route({
   resources: {
     'GET:/path': path.resolve('handlers/get-path'),
     'GET:/path/{id}': path.resolve('handlers/get-path-id'),
@@ -32,7 +32,7 @@ describe('Routing from request.resource:', function () {
       path: '/path',
       httpMethod: 'GET'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.executedFile.should.equal('get-path')
@@ -48,7 +48,7 @@ describe('Routing from request.resource:', function () {
       path: '/path/1234',
       httpMethod: 'GET'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.executedFile.should.equal('get-path-id')
@@ -64,7 +64,7 @@ describe('Routing from request.resource:', function () {
       path: '/path/1234/sub',
       httpMethod: 'GET'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.executedFile.should.equal('get-path-id-sub')
@@ -80,7 +80,7 @@ describe('Routing from request.resource:', function () {
         resource: '/path/{id}',
         httpMethod: 'PUT'
       }
-      router(fakeReq, {}, function (err,res) {
+      fnHandler(fakeReq, {}, function (err,res) {
         try {
           let body = JSON.parse(res.body)
           body.executedFile.should.equal('put-path-id')
@@ -95,7 +95,7 @@ describe('Routing from request.resource:', function () {
         path: '/path/1234',
         httpMethod: 'DELETE'
       }
-      router(fakeReq, {}, function (err,res) {
+      fnHandler(fakeReq, {}, function (err,res) {
         try {
           let body = JSON.parse(res.body)
           body.executedFile.should.equal('delete-path-id')
@@ -112,7 +112,7 @@ describe('Routing from request.resource:', function () {
       path: '/does/not/matter',
       httpMethod: 'OPTIONS'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(204)
         done()
@@ -127,7 +127,7 @@ describe('Routing from request.resource:', function () {
       path: '/path/1234',
       httpMethod: 'POST'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(405)
         done()
@@ -142,7 +142,7 @@ describe('Routing from request.resource:', function () {
       path: '/path/1234/invalid',
       httpMethod: 'GET'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(404)
         done()
@@ -157,7 +157,7 @@ describe('Routing from request.resource:', function () {
       path: '/another/1234/one',
       httpMethod: 'GET'
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.executedFile.should.equal('another-one-resource')

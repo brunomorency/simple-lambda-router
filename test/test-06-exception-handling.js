@@ -7,7 +7,7 @@ const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
 
-let router = require('../index').route({
+let fnHandler = require('../index').route({
   resources: {
     'GET:/error/explicit': path.resolve('handlers/get-error-explicit'),
     'GET:/error/exception': path.resolve('handlers/get-error-exception')
@@ -21,7 +21,7 @@ describe('Handling errors from route handlers:', function () {
       "resource": "/error/explicit",
       "httpMethod": "GET"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(403)
         let body = JSON.parse(res.body)
@@ -38,7 +38,7 @@ describe('Handling errors from route handlers:', function () {
       "resource": "/error/exception",
       "httpMethod": "GET"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(500)
         let body = JSON.parse(res.body)

@@ -6,7 +6,7 @@ chai.use(chaiAsPromised)
 const fs = require('fs')
 const path = require('path')
 
-let router = require('../index').route({
+let fnHandler = require('../index').route({
   resources: {
     'GET:/path': path.resolve('handlers/get-path'),
     'GET:/html': path.resolve('handlers/get-html')
@@ -24,7 +24,7 @@ describe('Response headers:', function () {
       "resource": "/path",
       "httpMethod": "GET"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.headers.should.have.property('Access-Control-Allow-Methods')
         res.headers.should.have.property('Content-Type')
@@ -41,7 +41,7 @@ describe('Response headers:', function () {
       "resource": "/html",
       "httpMethod": "GET"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.headers.should.have.property('Content-Length')
         res.headers['Content-Length'].should.be.a('number')
@@ -56,7 +56,7 @@ describe('Response headers:', function () {
       "resource": "/html",
       "httpMethod": "GET"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.headers.should.have.property('Access-Control-Allow-Methods')
         res.headers['Access-Control-Allow-Methods'].should.equal('OPTIONS,GET,POST')
@@ -71,7 +71,7 @@ describe('Response headers:', function () {
       "resource": "/html",
       "httpMethod": "GET"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.headers.should.have.property('Content-Type')
         res.headers['Content-Type'].should.equal('text/html')

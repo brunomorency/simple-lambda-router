@@ -53,8 +53,6 @@ module.exports = {
             }
           }
 
-          let implementation = (handler.type == 'resource') ? require(cfg.resources[handler.key]) : require(cfg.paths[handler.key])
-
           if (request.headers) {
             let requestContentType = request.headers[Object.keys(request.headers).find(header => header.toLowerCase() == 'content-type')]
             if (requestContentType && typeof requestContentType == 'string' && requestContentType.search(/^application\/json(;|$)/) === 0) {
@@ -62,28 +60,7 @@ module.exports = {
             }
           }
 
-          // validate request parameters
-          if ('validate' in implementation) {
-            for (let part in implementation.validate) {
-              _debugLog(`Validating request.${part}`)
-              let {error, value} = implementation.validate[part].validate(request[part] || {});
-              if (error) {
-                // parts of the request isn't valid
-                _debugLog(`Validation error: ${JSON.stringify(error.details)}`)
-                let errMessage = error.details.map(e => e.message).join('. ')
-                return lambdaCallback(null, {
-                  statusCode:400,
-                  headers: cfg.headers,
-                  body: JSON.stringify({ message: errMessage })
-                })
-              } else {
-                request[part] = value
-              }
-            }
-          }
-
-          // handle the API request
-          implementation.handler(request, context, ...handlerParams)
+          _runImplementation((handler.type == 'resource') ? cfg.resources[handler.key] : cfg.paths[handler.key])
           .then(response => {
             _debugLog(`handler success: ${JSON.stringify(response)}`)
             response.body = (response.body && typeof response.body == 'object') ? JSON.stringify(response.body) : ''
@@ -94,7 +71,7 @@ module.exports = {
             return lambdaCallback(null, response)
           })
           .catch(err => {
-            _debugLog(`handler promise error:`, err)
+            _debugLog(`Error: ${err.message}`)
             if (err instanceof RouteError) {
               return lambdaCallback(null,{
                 statusCode: err.statusCode,
@@ -105,6 +82,42 @@ module.exports = {
               return lambdaCallback(null, genericInternalErrorResponse)
             }
           })
+
+          function _runImplementation(handler) {
+            if (Array.isArray(handler)) {
+              return handler.reduce((p, stepFile) => p.then(previousStepOutput => {
+                return _runImplementationStep(require(stepFile), previousStepOutput)
+              }), Promise.resolve(null))
+            } else {
+              return _runImplementationStep(require(handler))
+            }
+          }
+
+          function _runImplementationStep(step, previousStepOutput=null) {
+            // validate request parameters
+            if ('validate' in step) {
+              for (let part in step.validate) {
+                _debugLog(`Validating request.${part}`)
+                let {error, value} = step.validate[part].validate(request[part] || {});
+                if (error) {
+                  // parts of the request isn't valid
+                  _debugLog(`Validation error: ${JSON.stringify(error.details)}`)
+                  return Promise.reject(new RouteError({
+                    statusCode: 400,
+                    message: error.details.map(e => e.message).join('. ')
+                  }))
+                } else {
+                  request[part] = value
+                }
+              }
+            }
+            // handle the API request
+            if (previousStepOutput) {
+              return step.handler(request, context, previousStepOutput, ...handlerParams)
+            } else {
+              return step.handler(request, context, ...handlerParams)
+            }
+          }
 
         } catch (err) {
           _debugLog(`handler error:`, err.message)
@@ -157,6 +170,7 @@ function _getRequestHandlerFile(cfg, request) {
 
     if (matchingPathKey) {
       let originalReqPathParts = request.path.split('/')
+      if (!('pathParameters' in request)) request.pathParameters = {}
       matchingPathKey.split(':').pop().split('/').forEach((part, idx) => {
         if (part.substr(0,1) == '{' && part.substr(-1) == '}') {
           request.pathParameters[part.slice(1,-1)] = decodeURIComponent(originalReqPathParts[idx])

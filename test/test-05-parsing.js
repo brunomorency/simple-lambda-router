@@ -7,7 +7,7 @@ const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
 
-let router = require('../index').route({
+let fnHandler = require('../index').route({
   resources: {
     'POST:/path': path.resolve('handlers/post-path'),
     'POST:/path/validated': path.resolve('handlers/post-path-validated'),
@@ -27,7 +27,7 @@ describe('Handling requests body:', function () {
       "queryStringParameters": null,
       "body": "{\"aBoolean\":false,\"props\":{\"year\":2017}}"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.requestBodyType.should.equal('object')
@@ -48,7 +48,7 @@ describe('Handling requests body:', function () {
       "queryStringParameters": null,
       "body": "{\"aBoolean\":false,\"props\":{\"year\":2017,\"month\":\"June\"},\"aString\":\"toto\"}"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(200)
         done()
@@ -67,7 +67,7 @@ describe('Handling requests body:', function () {
       "queryStringParameters": null,
       "body": "{\"props\":{\"month\":\"June\"},\"aString\":\"toto\"}"
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(400)
         let body = JSON.parse(res.body)
@@ -91,7 +91,7 @@ describe('Handling requests query parameters:', function () {
         "status": "opened"
       }
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(200)
         done()
@@ -108,7 +108,7 @@ describe('Handling requests query parameters:', function () {
         "status": "inprogress"
       }
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(400)
         let body = JSON.parse(res.body)
