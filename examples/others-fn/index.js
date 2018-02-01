@@ -9,7 +9,18 @@ exports.handler = Router.route(
     paths: {
       'GET:/cats': path.resolve('get-cats'),
       'GET:/cities': path.resolve('get-cities'),
-      'GET:/cities/{name}': path.resolve('get-city-by-name')
+      'GET:/cities/{name}': [
+        path.resolve('init-city'),
+        path.resolve('get-city-by-name')
+      ],
+      'GET:/cities/{name}/restaurants': [
+        path.resolve('init-city'),
+        path.resolve('get-city-restaurants')
+      ],
+      'GET:/cities/{name}/weather': [
+        path.resolve('init-city'),
+        path.resolve('get-city-weather')
+      ],
     },
     headers: {
       'Access-Control-Allow-Methods': "OPTIONS,GET,POST,DELETE",

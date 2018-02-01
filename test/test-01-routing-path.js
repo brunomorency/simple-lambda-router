@@ -6,7 +6,7 @@ chai.use(chaiAsPromised)
 const fs = require('fs')
 const path = require('path')
 
-let router = require('../index').route({
+let fnHandler = require('../index').route({
   paths: {
     'GET:/path': path.resolve('handlers/get-path'),
     'GET:/path/{id}': path.resolve('handlers/get-path-id'),
@@ -25,7 +25,7 @@ describe('Routing from request.path:', function () {
       httpMethod: 'GET',
       pathParameters: {}
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.should.have.property('executedFile')
@@ -43,7 +43,7 @@ describe('Routing from request.path:', function () {
       httpMethod: 'GET',
       pathParameters: {}
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.should.have.property('executedFile')
@@ -64,7 +64,7 @@ describe('Routing from request.path:', function () {
       httpMethod: 'GET',
       pathParameters: {}
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         let body = JSON.parse(res.body)
         body.should.have.property('executedFile')
@@ -86,7 +86,7 @@ describe('Routing from request.path:', function () {
         httpMethod: 'PUT',
         pathParameters: {}
       }
-      router(fakeReq, {}, function (err,res) {
+      fnHandler(fakeReq, {}, function (err,res) {
         try {
           let body = JSON.parse(res.body)
           body.should.have.property('executedFile')
@@ -106,7 +106,7 @@ describe('Routing from request.path:', function () {
         httpMethod: 'DELETE',
         pathParameters: {}
       }
-      router(fakeReq, {}, function (err,res) {
+      fnHandler(fakeReq, {}, function (err,res) {
         try {
           let body = JSON.parse(res.body)
           body.should.have.property('executedFile')
@@ -128,7 +128,7 @@ describe('Routing from request.path:', function () {
       httpMethod: 'OPTIONS',
       pathParameters: {}
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(204)
         done()
@@ -144,7 +144,7 @@ describe('Routing from request.path:', function () {
       httpMethod: 'POST',
       pathParameters: {}
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(405)
         done()
@@ -160,7 +160,7 @@ describe('Routing from request.path:', function () {
       httpMethod: 'GET',
       pathParameters: {}
     }
-    router(fakeReq, {}, function (err,res) {
+    fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(404)
         done()

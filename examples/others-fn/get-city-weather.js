@@ -8,8 +8,7 @@ module.exports.handler = (request, context, cityItem, knownCities) => {
   return Promise.resolve({
     statusCode: 200,
     body: {
-      name: cityItem.name,
-      information: cityItem.getDdgLink()
+      // weather information here
     }
   })
 }
