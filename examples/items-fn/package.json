@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "joi": "^13.1.2",
-    "simple-lambda-router": "^1.1.0"
+    "simple-lambda-router": "^1.1.1"
   }
 }

@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "simple-lambda-router": "^1.1.0"
+    "simple-lambda-router": "^1.1.1"
   }
 }
