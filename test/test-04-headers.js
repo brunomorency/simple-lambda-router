@@ -9,7 +9,7 @@ const path = require('path')
 let fnHandler = require('../index').route({
   resources: {
     'GET:/path': path.resolve('handlers/get-path'),
-    'GET:/html': path.resolve('handlers/get-html')
+    'GET:/html': path.resolve('handlers/response-body-types/html')
   },
   headers: {
     'Access-Control-Allow-Methods': 'OPTIONS,GET,POST',

@@ -62,15 +62,27 @@ module.exports = {
 
           _runImplementation((handler.type == 'resource') ? cfg.resources[handler.key] : cfg.paths[handler.key])
           .then(response => {
+
             _debugLog(`handler success: ${JSON.stringify(response)}`)
-            response.body = (response.body && typeof response.body == 'object') ? JSON.stringify(response.body) : ''
-            if (!('headers' in response)) response.headers = cfg.headers
+            // apply headers from config and augment with headers from handler response
+            if (!('headers' in response)) {
+              response.headers = cfg.headers
+            }
             else {
               response.headers = Object.assign({}, cfg.headers, response.headers)
             }
+
+            if (response.body && typeof response.body == 'object') {
+              response.body = JSON.stringify(response.body)
+              response.headers['Content-Type'] = 'application/json'
+            } else {
+              response.body = response.body || ''
+            }
+
             return lambdaCallback(null, response)
           })
           .catch(err => {
+
             _debugLog(`Error: ${err.message}`)
             if (err instanceof RouteError) {
               return lambdaCallback(null,{
@@ -81,6 +93,7 @@ module.exports = {
             } else {
               return lambdaCallback(null, genericInternalErrorResponse)
             }
+
           })
 
           function _runImplementation(handler) {
