@@ -1,20 +1,20 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai from 'chai'
 const should = chai.should()
 chai.use(chaiAsPromised)
-const assert = require('assert')
 
-const fs = require('fs')
-const path = require('path')
+import path from 'node:path'
+import assert from 'node:assert'
+import { route } from '../index.mjs'
 
-let fnHandler = require('../index').route({
+let fnHandler = route({
   resources: {
-    'GET:/json': path.resolve('handlers/response-body-types/json'),
-    'GET:/string': path.resolve('handlers/response-body-types/string'),
-    'GET:/null': path.resolve('handlers/response-body-types/null')
+    'GET:/json': path.resolve('handlers/response-body-types/json.mjs'),
+    'GET:/string': path.resolve('handlers/response-body-types/string.mjs'),
+    'GET:/null': path.resolve('handlers/response-body-types/null.mjs')
   },
   paths: {
-    'GET:/number/{nb}': path.resolve('handlers/response-body-types/number'),
+    'GET:/number/{nb}': path.resolve('handlers/response-body-types/number.mjs'),
   }
 })
 
