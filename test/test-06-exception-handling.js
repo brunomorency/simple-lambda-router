@@ -4,9 +4,9 @@ const should = chai.should()
 chai.use(chaiAsPromised)
 
 import path from 'node:path'
-import { route } from '../index.mjs'
+import { Route } from '../index.mjs'
 
-let fnHandler = route({
+let fnHandler = Route({
   resources: {
     'GET:/error/explicit': path.resolve('handlers/get-error-explicit.mjs'),
     'GET:/error/exception': path.resolve('handlers/get-error-exception.mjs')

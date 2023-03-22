@@ -5,9 +5,9 @@ chai.use(chaiAsPromised)
 
 import path from 'node:path'
 import assert from 'node:assert'
-import { route } from '../index.mjs'
+import { Route } from '../index.mjs'
 
-let fnHandler = route({
+let fnHandler = Route({
   resources: {
     'POST:/path': path.resolve('handlers/post-path.mjs'),
     'POST:/path/validated': path.resolve('handlers/post-path-validated.mjs'),

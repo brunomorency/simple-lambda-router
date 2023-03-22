@@ -4,9 +4,9 @@ const should = chai.should()
 chai.use(chaiAsPromised)
 
 import path from 'node:path'
-import { route } from '../index.mjs'
+import { Route } from '../index.mjs'
 
-let fnHandler = route({
+let fnHandler = Route({
   paths: {
     'GET:/item/{id}/sub': [
       path.resolve('handlers/init-item.mjs'),

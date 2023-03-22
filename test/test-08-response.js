@@ -5,9 +5,9 @@ chai.use(chaiAsPromised)
 
 import path from 'node:path'
 import assert from 'node:assert'
-import { route } from '../index.mjs'
+import { Route } from '../index.mjs'
 
-let fnHandler = route({
+let fnHandler = Route({
   resources: {
     'GET:/json': path.resolve('handlers/response-body-types/json.mjs'),
     'GET:/string': path.resolve('handlers/response-body-types/string.mjs'),

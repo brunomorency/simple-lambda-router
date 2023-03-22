@@ -5,7 +5,7 @@ export class RouteError extends Error {
   }
 }
 
-export const route = (config, ...handlerParams) => (request, context, lambdaCallback) => {
+export const Route = (config, ...handlerParams) => (request, context, lambdaCallback) => {
 
   let cfg = Object.assign({}, {
     resources: null,
