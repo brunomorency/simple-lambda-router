@@ -185,7 +185,7 @@ function _getRequestHandlerFile(cfg, request) {
       let originalReqPathParts = request.path.split('/')
       if (!('pathParameters' in request)) request.pathParameters = {}
       matchingPathKey.split(':').pop().split('/').forEach((part, idx) => {
-        if (part.substr(0,1) == '{' && part.substr(-1) == '}') {
+        if (part.substring(0,1) == '{' && part.substring(part.length - 1) == '}') {
           request.pathParameters[part.slice(1,-1)] = decodeURIComponent(originalReqPathParts[idx])
         }
       })
@@ -204,6 +204,6 @@ function _pathMatchesPattern(path, pattern) {
   let _path = (Array.isArray(path)) ? path : path.split('/')
   let _parts = pattern.split('/')
   return _parts.length == _path.length && _parts.every((part, idx) => {
-    return (part == _path[idx] || (part.substr(0,1) == '{' && part.substr(-1) == '}'))
+    return (part == _path[idx] || (part.substring(0,1) == '{' && part.substring(part.length - 1) == '}'))
   })
 }
