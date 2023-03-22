@@ -1,6 +1,4 @@
-'use strict'
-
-module.exports.handler = (request, context) => {
+export const handler = (request, context) => {
   let htmlText = '<html><body><p>This is some text</p></body></html>'
   return Promise.resolve({
     statusCode: 200,

@@ -1,15 +1,15 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai from 'chai'
 const should = chai.should()
 chai.use(chaiAsPromised)
 
-const fs = require('fs')
-const path = require('path')
+import path from 'node:path'
+import { route } from '../index.mjs'
 
-let fnHandler = require('../index').route({
+let fnHandler = route({
   resources: {
-    'GET:/path': path.resolve('handlers/get-path'),
-    'GET:/html': path.resolve('handlers/response-body-types/html')
+    'GET:/path': path.resolve('handlers/get-path.mjs'),
+    'GET:/html': path.resolve('handlers/response-body-types/html.mjs')
   },
   headers: {
     'Access-Control-Allow-Methods': 'OPTIONS,GET,POST',
