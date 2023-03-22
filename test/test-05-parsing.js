@@ -1,17 +1,17 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai from 'chai'
 const should = chai.should()
 chai.use(chaiAsPromised)
-const assert = require('assert')
 
-const fs = require('fs')
-const path = require('path')
+import path from 'node:path'
+import assert from 'node:assert'
+import { route } from '../index.mjs'
 
-let fnHandler = require('../index').route({
+let fnHandler = route({
   resources: {
-    'POST:/path': path.resolve('handlers/post-path'),
-    'POST:/path/validated': path.resolve('handlers/post-path-validated'),
-    'GET:/path/validated': path.resolve('handlers/get-path-validated')
+    'POST:/path': path.resolve('handlers/post-path.mjs'),
+    'POST:/path/validated': path.resolve('handlers/post-path-validated.mjs'),
+    'GET:/path/validated': path.resolve('handlers/get-path-validated.mjs')
   }
 })
 
@@ -46,11 +46,38 @@ describe('Handling requests body:', function () {
         "Content-Type": "application/json; charset=utf-8"
       },
       "queryStringParameters": null,
-      "body": "{\"aBoolean\":false,\"props\":{\"year\":2017,\"month\":\"June\"},\"aString\":\"toto\"}"
+      "body": "{\"aBoolean\":true,\"props\":{\"year\":2017,\"month\":\"June\"},\"aString\":\"toto\"}"
     }
     fnHandler(fakeReq, {}, function (err,res) {
       try {
         res.statusCode.should.equal(200)
+        let body = JSON.parse(res.body)
+        body.should.have.property('originalRequestBody')
+        body.originalRequestBody.should.have.property('aBoolean')
+        body.originalRequestBody.aBoolean.should.equal(true)
+        done()
+      }
+      catch(e) { done(e) }
+    })
+  })
+
+  it('Correctly adds default values from validation when requests doesn\'t include those', function (done) {
+    let fakeReq = {
+      "resource": "/path/validated",
+      "httpMethod": "POST",
+      "headers": {
+        "Content-Type": "application/json; charset=utf-8"
+      },
+      "queryStringParameters": null,
+      "body": "{\"props\":{\"year\":2017,\"month\":\"June\"},\"aString\":\"toto\"}"
+    }
+    fnHandler(fakeReq, {}, function (err,res) {
+      try {
+        res.statusCode.should.equal(200)
+        let body = JSON.parse(res.body)
+        body.should.have.property('originalRequestBody')
+        body.originalRequestBody.should.have.property('aBoolean')
+        body.originalRequestBody.aBoolean.should.equal(false)
         done()
       }
       catch(e) { done(e) }
@@ -72,7 +99,7 @@ describe('Handling requests body:', function () {
         res.statusCode.should.equal(400)
         let body = JSON.parse(res.body)
         should.exist(body.message)
-        body.message.should.equal('"year" is required')
+        body.message.should.equal('"props.year" is required')
         done()
       }
       catch(e) { done(e) }
