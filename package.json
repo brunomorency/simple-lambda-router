@@ -5,7 +5,7 @@
   "description": "Small router utility for lambda functions handling HTTP events from multiple resources and methods",
   "exports": "./index.mjs",
   "scripts": {
-    "test": "cd test && mocha test-04-*.js"
+    "test": "cd test && mocha test-06-*.js"
   },
   "author": "Bruno Morency <bruno@morency.me>",
   "license": "MIT",

@@ -1,16 +1,15 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai from 'chai'
 const should = chai.should()
 chai.use(chaiAsPromised)
-const assert = require('assert')
 
-const fs = require('fs')
-const path = require('path')
+import path from 'node:path'
+import { route } from '../index.mjs'
 
-let fnHandler = require('../index').route({
+let fnHandler = route({
   resources: {
-    'GET:/error/explicit': path.resolve('handlers/get-error-explicit'),
-    'GET:/error/exception': path.resolve('handlers/get-error-exception')
+    'GET:/error/explicit': path.resolve('handlers/get-error-explicit.mjs'),
+    'GET:/error/exception': path.resolve('handlers/get-error-exception.mjs')
   }
 })
 

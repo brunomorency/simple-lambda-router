@@ -1,11 +1,9 @@
-class RouteError extends Error {
+export class RouteError extends Error {
   constructor({statusCode, message}) {
     super(message)
     this.statusCode = statusCode
   }
 }
-
-export const error = RouteError;
 
 export const route = (config, ...handlerParams) => (request, context, lambdaCallback) => {
 
