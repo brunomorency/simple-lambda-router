@@ -1,24 +1,24 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai from 'chai'
 const should = chai.should()
 chai.use(chaiAsPromised)
 
-const fs = require('fs')
-const path = require('path')
+import path from 'node:path'
+import { route } from '../index.mjs'
 
-let fnHandler = require('../index').route({
+let fnHandler = route({
   paths: {
     'GET:/item/{id}/sub': [
-      path.resolve('handlers/init-item'),
-      path.resolve('handlers/get-item-id-sub')
+      path.resolve('handlers/init-item.mjs'),
+      path.resolve('handlers/get-item-id-sub.mjs')
     ],
     'GET:/exception/{id}/sub': [
-      path.resolve('handlers/get-error-exception'),
-      path.resolve('handlers/get-item-id-sub')
+      path.resolve('handlers/get-error-exception.mjs'),
+      path.resolve('handlers/get-item-id-sub.mjs')
     ],
     'GET:/item/{id}/exception': [
-      path.resolve('handlers/init-item'),
-      path.resolve('handlers/get-error-exception')
+      path.resolve('handlers/init-item.mjs'),
+      path.resolve('handlers/get-error-exception.mjs')
     ]
   }
 })
@@ -92,7 +92,7 @@ describe('Chaining handlers:', function () {
         try {
           res.statusCode.should.equal(400)
           let body = JSON.parse(res.body)
-          body.message.should.equal('"hockey" must be one of [habs]')
+          body.message.should.equal('"hockey" must be [habs]')
           done()
         }
         catch(e) { done(e) }
@@ -147,7 +147,7 @@ describe('Chaining handlers:', function () {
         try {
           res.statusCode.should.equal(400)
           let body = JSON.parse(res.body)
-          body.message.should.equal('"soccer" must be one of [imfc]')
+          body.message.should.equal('"soccer" must be [imfc]')
           done()
         }
         catch(e) { done(e) }
