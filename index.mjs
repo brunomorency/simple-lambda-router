@@ -95,10 +95,14 @@ export const route = (config, ...handlerParams) => (request, context, lambdaCall
         function _runImplementation(handler) {
           if (Array.isArray(handler)) {
             return handler.reduce((p, stepFile) => p.then(previousStepOutput => {
-              return _runImplementationStep(require(stepFile), previousStepOutput)
+              return import(stepFile).then((handlerMod) => {
+                return _runImplementationStep(handlerMod, previousStepOutput)
+              })
             }), Promise.resolve(null))
           } else {
-            return _runImplementationStep(require(handler))
+            return import(handler).then((handlerMod) => {
+              return _runImplementationStep(handlerMod)
+            })
           }
         }
 
