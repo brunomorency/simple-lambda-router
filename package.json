@@ -1,11 +1,11 @@
 {
   "name": "simple-lambda-router",
   "type": "module",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Small router utility for lambda functions handling HTTP events from multiple resources and methods",
   "exports": "./index.mjs",
   "scripts": {
-    "test": "cd test && mocha test-*.js"
+    "test": "cd test && mocha test-02-*.js"
   },
   "author": "Bruno Morency <bruno@morency.me>",
   "license": "MIT",

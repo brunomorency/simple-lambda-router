@@ -1,22 +1,22 @@
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
+import chaiAsPromised from 'chai-as-promised'
+import chai from 'chai'
 const should = chai.should()
 chai.use(chaiAsPromised)
 
-const fs = require('fs')
-const path = require('path')
+import path from 'node:path'
+import { route } from '../index.mjs'
 
-let fnHandler = require('../index').route({
+let fnHandler = route({
   resources: {
-    'GET:/path': path.resolve('handlers/get-path'),
-    'GET:/path/{id}': path.resolve('handlers/get-path-id'),
-    'GET:/path/{id}/sub': path.resolve('handlers/get-path-id-sub'),
-    'PUT:/path/{id}': path.resolve('handlers/put-path-id'),
-    'DELETE:/path/{id}': path.resolve('handlers/delete-path-id'),
-    'GET:/another/{id}/one': path.resolve('handlers/another-one-resource')
+    'GET:/path': path.resolve('handlers/get-path.mjs'),
+    'GET:/path/{id}': path.resolve('handlers/get-path-id.mjs'),
+    'GET:/path/{id}/sub': path.resolve('handlers/get-path-id-sub.mjs'),
+    'PUT:/path/{id}': path.resolve('handlers/put-path-id.mjs'),
+    'DELETE:/path/{id}': path.resolve('handlers/delete-path-id.mjs'),
+    'GET:/another/{id}/one': path.resolve('handlers/another-one-resource.mjs')
   },
   paths: {
-    'GET:/another/{id}/one': path.resolve('handlers/another-one-path')
+    'GET:/another/{id}/one': path.resolve('handlers/another-one-path.mjs')
   }
 })
 
